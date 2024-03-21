@@ -12,7 +12,7 @@ Then make the following REST call (with httpie):
 
 > http post :8080/fruits/jsonobject raw '{ "payload": {"name": "john doe"} }'
 
-Result: http 200 with empty body.
+Result: http 200 with empty body.  
 Expected: http 200 with the given payload.
 
 When the payload is mapped as `Map<String,Object` then it works:
