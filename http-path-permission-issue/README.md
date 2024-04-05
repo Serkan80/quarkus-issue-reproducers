@@ -35,5 +35,5 @@ quarkus.http.auth.permission.bearer.policy=permit
 quarkus.http.auth.permission.bearer.auth-mechanism=bearer
 ```
 
-And make the http call again and now it works (e.g. the JWT token should have a subject), 
+And uncomment the class `AuthenticationSelector` and make the http call again and now everything works (e.g. the JWT token should have a subject), 
 because `AuthenticationSelector` kicks in and sets the authentication mechanisms correctly. 
