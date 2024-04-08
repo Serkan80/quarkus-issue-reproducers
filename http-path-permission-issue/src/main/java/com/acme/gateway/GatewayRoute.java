@@ -110,10 +110,10 @@ public class GatewayRoute extends EndpointRouteBuilder {
 
         if (proxyUrl == null || proxyUrl.isBlank()) {
             throw new NotFoundException("No proxy found for url: %s".formatted(incomingRequestPath));
-        } else {
-            Log.debugf("service: %s, proxyUrl: %s, proxyPath: %s\n", service, proxyUrl, proxyPath);
-            exchange.getIn().setHeader("forwardUrl", "%s%s".formatted(proxyUrl, proxyPath));
-        }
+        } 
+        
+        Log.debugf("service: %s, proxyUrl: %s, proxyPath: %s\n", service, proxyUrl, proxyPath);
+        exchange.getIn().setHeader("forwardUrl", "%s%s".formatted(proxyUrl, proxyPath));        
     }
 
     private void setErrorMessage(Exchange exchange, Exception e) {
