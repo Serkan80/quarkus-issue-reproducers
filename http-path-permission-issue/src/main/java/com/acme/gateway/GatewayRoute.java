@@ -20,7 +20,7 @@ import static org.apache.camel.Exchange.HTTP_PATH;
 import static org.apache.camel.Exchange.HTTP_URI;
 import static org.apache.camel.LoggingLevel.DEBUG;
 import static org.apache.camel.component.platform.http.vertx.VertxPlatformHttpConstants.REMOTE_ADDRESS;
-import static org.apache.http.entity.ContentType.MULTIPART_FORM_DATA;
+import static org.apache.hc.core5.http.ContentType.MULTIPART_FORM_DATA;
 
 
 @ApplicationScoped
@@ -71,7 +71,6 @@ public class GatewayRoute extends EndpointRouteBuilder {
 
         // binary part of multipart
         if (attachments != null) {
-            message.getAttachmentObjects().entrySet().forEach(entry -> Log.debugf("attachmentObject key: %s, value: %s", entry.getKey(), entry.getValue().getHeaderNames()));
             attachments.entrySet().forEach(entry -> multiPartBuilder.addBinaryBody("file", Unchecked.supplier(() -> entry.getValue().getInputStream()).get()));
         }
 
