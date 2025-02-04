@@ -7,7 +7,7 @@ The app should only allow video formats to be uploaded.
 
 Now upload `pom.xml` and you should expect an error, but it returns OK.
 
-> http -f post :8080/upload file@pom.xml
+> http -f post :8080/upload file@pom.xml  
 HTTP/1.1 200 OK
 content-length: 0
 
