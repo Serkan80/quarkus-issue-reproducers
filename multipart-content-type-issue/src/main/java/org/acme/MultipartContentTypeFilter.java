@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -21,7 +22,7 @@ public class MultipartContentTypeFilter {
     @ConfigProperty(name = "quarkus.http.body.multipart.file-content-types")
     List<String> allowedContentTypes;
 
-    //@RouteFilter(Priorities.USER + 1)
+    @RouteFilter(Priorities.USER + 1)
     public void filter(RoutingContext ctx) {
         if (!isMultipartRequest(ctx)) {
             ctx.next();
@@ -29,6 +30,7 @@ public class MultipartContentTypeFilter {
         }
 
         ctx.request().setExpectMultipart(true);
+        var hasError = new AtomicBoolean(false);
 
         ctx.request().uploadHandler(fileUpload -> {
             var filePath = Path.of(fileUpload.filename());
@@ -36,12 +38,17 @@ public class MultipartContentTypeFilter {
                 var contentType = Files.probeContentType(filePath);
                 if (contentType == null || !allowedContentTypes.contains(contentType)) {
                     sendJsonError(ctx, 415, "Unsupported media type detected", contentType);
+                    hasError.set(true);
                 }
             } catch (IOException e) {
                 sendJsonError(ctx, 500, "Error processing file", e.getMessage());
+                hasError.set(true);
             }
         });
-        ctx.next();
+
+        if (!hasError.get()) {
+            ctx.next();
+        }
     }
 
     private boolean isMultipartRequest(RoutingContext ctx) {
