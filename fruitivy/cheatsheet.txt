@@ -1,0 +1,56 @@
+FruitEntity.java:
+
+@NotBlank
+@Column(unique = true)
+public String name;
+
+@NotBlank
+public String family;
+
+@Embedded
+public Nutrition nutrition;
+
+---
+Nutrition.java:
+
+@Min(0) @Max(1000) Float calories,
+@Min(0) @Max(1000) Float fat,
+@Min(0) @Max(1000) Float sugar,
+@Min(0) @Max(1000) Float carbohydrates,
+@Min(0) @Max(1000) Float protein
+``
+---
+FruitPOST.java:
+
+public record FruitPOST(
+
+        @NotBlank
+        @Length(min = 3, max = 50)
+        String name,
+
+        @NotBlank
+        @Length(min = 3, max = 50)
+        String family
+
+) {
+    public FruitEntity toEntity() {
+        var result = new FruitEntity();
+        result.name = this.name.toLowerCase();
+        result.family = this.family.toLowerCase();
+        return result;
+    }
+}
+
+---
+Fruit.java:
+
+public record Fruit(
+        String name,
+        String family,
+        @JsonProperty("nutritions")
+        Nutrition nutrition
+) {
+    public static Fruit toDto(FruitEntity entity) {
+        return new Fruit(entity.name, entity.family, entity.nutrition);
+    }
+}

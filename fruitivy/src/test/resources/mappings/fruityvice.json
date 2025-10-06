@@ -1,0 +1,27 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "GET",
+        "urlPathPattern": ".*/api/fruit/citrus"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "body": "{ \"name\": \"Orange\", \"id\": 6, \"family\": \"Citrus\", \"order\": \"Rosales\", \"genus\": \"Malus\", \"nutritions\": { \"calories\": 52, \"fat\": 0.4, \"sugar\": 10.3, \"carbohydrates\": 11.4, \"protein\": 0.3 } }"
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "urlPathPattern": ".*/api/fruit/pineapple"
+      },
+      "response": {
+        "status": 404,
+        "body": "Not found"
+      }
+    }
+  ]
+}
