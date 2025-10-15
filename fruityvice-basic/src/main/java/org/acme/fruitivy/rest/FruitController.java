@@ -9,7 +9,7 @@ import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.StreamingOutput;
-import org.acme.fruitivy.clients.FruitivyDirectClient;
+import org.acme.fruitivy.clients.FruitivyClient;
 import org.acme.fruitivy.entities.FruitEntity;
 import org.acme.fruitivy.rest.dto.Fruit;
 import org.acme.fruitivy.rest.dto.FruitPOST;
@@ -34,7 +34,7 @@ import static org.hibernate.jpa.QueryHints.HINT_READONLY;
 public class FruitController implements FruitOpenApi {
 
     @RestClient
-    FruitivyDirectClient client;
+    FruitivyClient client;
 
     @Override
     @Transactional
