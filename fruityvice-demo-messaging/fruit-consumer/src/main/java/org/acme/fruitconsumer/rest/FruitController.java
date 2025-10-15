@@ -1,6 +1,7 @@
 package org.acme.fruitconsumer.rest;
 
 import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.infrastructure.Infrastructure;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -24,7 +25,8 @@ public class FruitController {
     @GET
     @RestStreamElementType(APPLICATION_JSON)
     public Multi<Fruit> stream() {
-        return this.fruits;
+        return this.fruits.emitOn(Infrastructure.getDefaultWorkerPool())
+                          .map(fruit -> FruitEntity.findByName(fruit.name()));
     }
 
     @GET
@@ -34,6 +36,7 @@ public class FruitController {
     }
 
     @GET
+    @Path("/all")
     public List<Fruit> findAll() {
         return FruitEntity.allFruits();
     }
