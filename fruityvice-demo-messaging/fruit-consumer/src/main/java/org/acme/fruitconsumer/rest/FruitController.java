@@ -3,6 +3,7 @@ package org.acme.fruitconsumer.rest;
 import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
+import io.vertx.core.json.JsonObject;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
@@ -26,8 +27,8 @@ import static org.hibernate.jpa.QueryHints.HINT_READONLY;
 public class FruitController {
 
     @Inject
-    @Channel("fruit-in")
-    Multi<Fruit> fruits;
+    @Channel("vote-in")
+    Multi<Vote> votes;
 
     @GET
     public List<Fruit> findAll() {
@@ -41,20 +42,24 @@ public class FruitController {
     }
 
     @GET
-    @Path("/stream")
-    @RestStreamElementType(APPLICATION_JSON)
-    public Multi<Fruit> stream() {
-        return this.fruits.emitOn(Infrastructure.getDefaultWorkerPool())
-                .map(fruit -> FruitEntity.findByName(fruit.name()));
-    }
-
-    @GET
     @Path("/votes")
     public List<Vote> votes() {
         return VoteEntity.findAll(Sort.by("fruit"))
                 .project(Vote.class)
                 .withHint(HINT_READONLY, true)
                 .list();
+    }
+
+    @GET
+    @Path("/votes/stream")
+    @RestStreamElementType(APPLICATION_JSON)
+    public Multi<JsonObject> stream() {
+        return this.votes.emitOn(Infrastructure.getDefaultWorkerPool())
+                .map(vote -> FruitEntity.<FruitEntity>findByIdOptional(vote.fruitId())
+                        .map(fruit -> JsonObject.mapFrom(vote).put("fruitName", fruit.name))
+                        .orElseThrow()
+                )
+                .onFailure().recoverWithCompletion();
     }
 
     @GET

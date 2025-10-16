@@ -26,7 +26,7 @@ public class VoteEntity extends PanacheEntity {
     public FruitEntity fruit;
 
     @NotBlank
-    @Column(unique = true)
+    @Column(name = "voter_id", unique = true)
     public String voterId;
 
     @NotNull

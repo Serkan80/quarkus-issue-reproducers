@@ -17,14 +17,16 @@
     <script src="demo.js"></script>
 </head>
 
-<body x-data="init()" x-init="get('/all')">
+<body x-data="init()" x-init="get('/votes/summary?by_channel=true')">
 
-    <template x-if="fruits !== null && Object.keys(fruits).length == 0">
-        <p class="mt-4">No fruits available</p>
+<template x-if="votes !== null && Object.keys(votes).length == 0">
+    <p class="mt-4">No votes available</p>
     </template>
 
-    <div x-show="fruits !== null && Object.keys(fruits).length > 0">
-        <div style="width: 800px" x-init="sse()"><canvas id="fruits-chart"></canvas></div>
+<div x-show="votes !== null && Object.keys(votes).length > 0">
+    <div style="width: 800px" x-init="sse()">
+        <canvas id="votes-chart"></canvas>
+    </div>
         <div class="row mt-3">
             <div class="col-md-5">
                 <div class="main-card mb-3 card">
@@ -33,17 +35,17 @@
                         <table class="table table-bordered table-sm">
                             <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Family</th>
+                                <th>Fruit Name</th>
+                                <th>Channel</th>
                                 <th>Count</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <template x-for="(fruit, index) in fruits" :key="index">
+                            <template x-for="(vote, index) in votes" :key="index">
                                 <tr>
-                                    <td x-text="fruit.name"></td>
-                                    <td x-text="fruit.family"></td>
-                                    <td x-text="fruit.counter"></td>
+                                    <td x-text="vote.fruit"></td>
+                                    <td x-text="vote.channel"></td>
+                                    <td x-text="vote.count"></td>
                                 </tr>
                             </template>
                             </tbody>

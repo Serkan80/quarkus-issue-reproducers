@@ -1,7 +1,7 @@
 function init() {
 	return {
-		fruits: [],
-		fruitCounter: {},
+		votes: [],
+		votesCounter: {},
 		baseUrl: '/fruits',
 		chart: null,
 
@@ -11,24 +11,33 @@ function init() {
             fetch(`${this.baseUrl}${path}`, options)
                 .then(res => res.json())
                 .then(json => {
-                    this.fruits = json;
-                    this.fruits.sort((a, b) => b.counter - a.counter);
-                    this.fruits.forEach(fruit => this.fruitCounter[fruit.name] = fruit.counter);
+                    this.votes = json;
+                    this.votes.sort((a, b) => b.count - a.count);
+                    this.votes.forEach(vote => {
+                        if (!this.votesCounter[vote.fruit]) {
+                            this.votesCounter[vote.fruit] = 0;
+                        }
+                        this.votesCounter[vote.fruit] += vote.count;
+                    });
 
-                    const labels = Object.keys(this.fruitCounter);
-                    const values = Object.values(this.fruitCounter);
+                    const labels = Object.keys(this.votesCounter);
+                    const values = Object.values(this.votesCounter);
 					this.chart = drawChart(this.chart, labels, values);
                 });
 		},
 
 		sse() {
-			this.source = new EventSource(this.baseUrl);
+			this.source = new EventSource(this.baseUrl + "/votes/stream");
             this.source.onmessage = (event) => {
-                const fruit = JSON.parse(event.data);
-                this.fruitCounter[fruit.name] = (fruit.counter || 1);
+                const vote = JSON.parse(event.data);
 
-                const labels = Object.keys(this.fruitCounter);
-                const values = Object.values(this.fruitCounter);
+                if (!this.votesCounter[vote.fruitName]) {
+                    this.votesCounter[vote.fruitName] = 0;
+                }
+                this.votesCounter[vote.fruitName]++;
+
+                const labels = Object.keys(this.votesCounter);
+                const values = Object.values(this.votesCounter);
 				this.chart = drawChart(this.chart, labels, values);
             };
 		}
@@ -37,9 +46,9 @@ function init() {
 
 function drawChart(chart, labels, data) {
 	if (!chart) {
-        const ctx = document.getElementById('fruits-chart');
+        const ctx = document.getElementById('votes-chart');
         return new Chart(ctx, {
-            type: 'bar',
+            type: 'pie',
             data: {
               labels,
               datasets: [{
@@ -49,8 +58,13 @@ function drawChart(chart, labels, data) {
             }
         });
     } else {
-        chart.data.labels = labels;
-        chart.data.datasets[0].data = data;
+        chart.data.labels = [];
+        chart.data.labels.push(...labels);
+        chart.data.datasets[0].data = [];
+        chart.data.datasets[0].label = 'Most voted fruits';
+        chart.data.datasets[0].data.push(...data);
+        console.log(chart.data.datasets[0].data);
+        console.log(chart.data);
         chart.update();
         return chart;
     }
