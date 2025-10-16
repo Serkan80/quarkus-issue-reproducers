@@ -1,4 +1,4 @@
-package com.acme.gateway;
+package com.acme.gateway.rest;
 
 import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;

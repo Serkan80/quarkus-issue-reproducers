@@ -10,6 +10,7 @@ import jakarta.ws.rs.Path;
 import org.acme.fruitproducer.clients.FruityViceClient;
 import org.acme.fruitproducer.rest.dto.Fruit;
 import org.acme.fruitproducer.rest.dto.ValidationGroups.Post;
+import org.acme.fruitproducer.rest.dto.Vote;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -20,7 +21,11 @@ public class FruitController {
 
     @Inject
     @Channel("fruit-out")
-    Emitter<Fruit> emitter;
+    Emitter<Fruit> fruitEmitter;
+
+    @Inject
+    @Channel("vote-out")
+    Emitter<Vote> voteEmitter;
 
     @RestClient
     FruityViceClient client;
@@ -28,15 +33,22 @@ public class FruitController {
     @POST
     public void sendFruit(@Valid @ConvertGroup(to = Post.class) Fruit fruit) {
         var normalized = fruit.normalize();
-        this.emitter.send(normalized);
+        this.fruitEmitter.send(normalized);
         Log.infof("New %s sent", normalized);
+    }
+
+    @POST
+    @Path("/votes")
+    public void sendVote(@Valid Vote vote) {
+        this.voteEmitter.send(vote);
+        Log.infof("%s sent", vote);
     }
 
     @PATCH
     @Path("/{name}")
-    public void updateRemotely(@RestPath String name) {
+    public void updateFruitRemotely(@RestPath String name) {
         var fruit = this.client.findOptionally(name).normalize();
-        this.emitter.send(fruit);
+        this.fruitEmitter.send(fruit);
         Log.infof("%s update sent", fruit);
     }
 }

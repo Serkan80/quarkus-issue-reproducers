@@ -7,7 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.NotFoundException;
 import org.acme.fruitconsumer.rest.dto.Fruit;
@@ -31,19 +30,16 @@ public class FruitEntity extends PanacheEntity {
     @Embedded
     public Nutritions nutritions;
 
-    @Min(0)
-    public Long counter;
-
     public static void upsert(Fruit fruit) {
         var normalizedFruit = fruit.normalize();
 
         //@formatter:off
         getEntityManager().createQuery(
                """
-               insert into FruitEntity (name, family, nutritions, counter) values(:name, :family, :nutritions, 1)
+               insert into FruitEntity (name, family, nutritions) values(:name, :family, :nutritions)
                on conflict (name) do
                update 
-               set nutritions = excluded.nutritions, family = excluded.family, counter = counter + 1
+               set nutritions = excluded.nutritions, family = excluded.family
                where name = excluded.name
                """
        )
