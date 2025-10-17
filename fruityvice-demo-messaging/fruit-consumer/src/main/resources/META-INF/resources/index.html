@@ -27,7 +27,7 @@
     <p class="mt-4">No fruits available</p>
 </template>
 
-<div x-show="votes !== null && Object.keys(votes).length > 0" style="width: 800px">
+<div x-show="votes !== null && Object.keys(votes).length > 0" style="width: 1000px; height: 500px">
     <canvas id="votes-chart"></canvas>
 </div>
 
@@ -35,6 +35,11 @@
     <div class="main-card mt-3 mb-3 card">
         <div class="card-body">
             <h5>Available Fruits</h5>
+            <div class="d-flex">
+                <button type="button" class="btn btn-primary ms-auto" @click.prevent="refresh()">
+                    Refresh
+                </button>
+            </div>
             <table class="table table-sm align-middle">
                 <thead>
                 <tr>
@@ -62,7 +67,7 @@
                         <td x-text="fruit.nutritions.sugar"></td>
                         <template x-if="!hasVoted">
                             <td>
-                                <a class="btn btn-outline-primary" @click.prevent="voteOnFruit(fruit.id)">Vote</a>
+                                <a class="btn btn-sm btn-outline-primary" @click.prevent="voteForFruit(fruit.id)">Vote</a>
                             </td>
                         </template>
                     </tr>

@@ -56,7 +56,7 @@ function init() {
             };
 		},
 
-		voteOnFruit(fruitId) {
+		voteForFruit(fruitId) {
 		    const randomNumber = Math.floor(Math.random() * 1000) + 1;
 		    const body = { fruitId: fruitId, voterId: `anonymous-${randomNumber}`, channel: 'WEB' };
 			const options = { headers: {'Content-Type': 'application/json'}, method: 'POST', body:  JSON.stringify(body)};
@@ -67,6 +67,15 @@ function init() {
 	                    this.hasVoted = true;
 	                }
 	            });
+		},
+
+		refresh() {
+			const options = { headers: {'Content-Type': 'application/json'}, method: 'PATCH'};
+            this.fruits.forEach(fruit => {
+                options.body = JSON.stringify(fruit);
+                fetch(`http://localhost:8080/fruits/${fruit.name}`, options);
+            })
+            this.getFruits();
 		}
 	}
 }
@@ -95,8 +104,9 @@ function drawChart(chart, labels, data) {
 			}]
 		},
 		options: {
+			animation: false,
 			responsive: true,
-			maintainAspectRatio: false,
+            maintainAspectRatio: false,
 			plugins: {
 				legend: {
 					display: true,

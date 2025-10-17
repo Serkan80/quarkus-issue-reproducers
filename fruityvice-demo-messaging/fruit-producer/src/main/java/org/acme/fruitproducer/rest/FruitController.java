@@ -41,7 +41,6 @@ public class FruitController {
 
     @PATCH
     @Path("/{name}")
-    @RolesAllowed("admin")
     public void updateFruitRemotely(@RestPath String name) {
         var fruit = this.client.findOptionally(name).normalize();
         this.fruitEmitter.send(fruit);
