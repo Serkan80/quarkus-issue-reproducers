@@ -35,6 +35,7 @@ function init() {
                     const labels = Object.keys(this.votesCounter);
                     const values = Object.values(this.votesCounter);
 					this.chart = drawChart(this.chart, labels, values);
+					this.getFruits();
 					this.sse();
                 });
 		},
