@@ -21,10 +21,10 @@
 
 <template x-if="votes !== null && Object.keys(votes).length == 0">
     <p class="mt-4">No votes available</p>
-    </template>
+</template>
 
 <div x-show="votes !== null && Object.keys(votes).length > 0">
-    <div style="width: 800px" x-init="sse()">
+    <div style="width: 800px">
         <canvas id="votes-chart"></canvas>
     </div>
         <div class="row mt-3">

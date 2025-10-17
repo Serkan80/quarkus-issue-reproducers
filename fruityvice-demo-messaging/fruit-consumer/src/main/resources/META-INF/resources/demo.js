@@ -23,6 +23,7 @@ function init() {
                     const labels = Object.keys(this.votesCounter);
                     const values = Object.values(this.votesCounter);
 					this.chart = drawChart(this.chart, labels, values);
+					this.sse();
                 });
 		},
 
@@ -45,27 +46,43 @@ function init() {
 }
 
 function drawChart(chart, labels, data) {
-	if (!chart) {
-        const ctx = document.getElementById('votes-chart');
-        return new Chart(ctx, {
-            type: 'pie',
-            data: {
-              labels,
-              datasets: [{
-                label: 'Most voted fruits',
-                data: data
-              }]
-            }
-        });
-    } else {
-        chart.data.labels = [];
-        chart.data.labels.push(...labels);
-        chart.data.datasets[0].data = [];
-        chart.data.datasets[0].label = 'Most voted fruits';
-        chart.data.datasets[0].data.push(...data);
-        console.log(chart.data.datasets[0].data);
-        console.log(chart.data);
-        chart.update();
-        return chart;
-    }
+	const ctx = document.getElementById('votes-chart');
+	if (!ctx) {
+		console.warn('[drawChart] Canvas element not found');
+		return;
+	}
+
+	// Always clean up broken or stale chart
+	if (chart && typeof chart.destroy === 'function' && !chart._destroyed) {
+		console.warn('[drawChart] Destroying existing chart before recreate');
+		chart.destroy();
+	}
+
+	// Create a new chart from scratch
+	const newChart = new window.Chart(ctx, {
+		type: 'pie',
+		data: {
+			labels,
+			datasets: [{
+				label: 'Most voted fruits',
+				data: data
+			}]
+		},
+		options: {
+			responsive: true,
+			maintainAspectRatio: false,
+			plugins: {
+				legend: {
+					display: true,
+					position: 'top'
+				},
+				title: {
+					display: true,
+					text: 'Fruit Votes'
+				}
+			}
+		}
+	});
+
+	return newChart;
 }

@@ -1,6 +1,7 @@
 package org.acme.fruitproducer.rest;
 
 import io.quarkus.logging.Log;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.validation.groups.ConvertGroup;
@@ -31,10 +32,20 @@ public class FruitController {
     FruityViceClient client;
 
     @POST
+    @RolesAllowed("admin")
     public void sendFruit(@Valid @ConvertGroup(to = Post.class) Fruit fruit) {
         var normalized = fruit.normalize();
         this.fruitEmitter.send(normalized);
         Log.infof("New %s sent", normalized);
+    }
+
+    @PATCH
+    @Path("/{name}")
+    @RolesAllowed("admin")
+    public void updateFruitRemotely(@RestPath String name) {
+        var fruit = this.client.findOptionally(name).normalize();
+        this.fruitEmitter.send(fruit);
+        Log.infof("%s update sent", fruit);
     }
 
     @POST
@@ -42,13 +53,5 @@ public class FruitController {
     public void sendVote(@Valid Vote vote) {
         this.voteEmitter.send(vote);
         Log.infof("%s sent", vote);
-    }
-
-    @PATCH
-    @Path("/{name}")
-    public void updateFruitRemotely(@RestPath String name) {
-        var fruit = this.client.findOptionally(name).normalize();
-        this.fruitEmitter.send(fruit);
-        Log.infof("%s update sent", fruit);
     }
 }

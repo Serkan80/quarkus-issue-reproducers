@@ -27,7 +27,7 @@ import static org.hibernate.jpa.QueryHints.HINT_READONLY;
 public class FruitController {
 
     @Inject
-    @Channel("vote-in")
+    @Channel("vote-sse")
     Multi<Vote> votes;
 
     @GET
@@ -45,9 +45,9 @@ public class FruitController {
     @Path("/votes")
     public List<Vote> votes() {
         return VoteEntity.findAll(Sort.by("fruit"))
-                .project(Vote.class)
-                .withHint(HINT_READONLY, true)
-                .list();
+                         .project(Vote.class)
+                         .withHint(HINT_READONLY, true)
+                         .list();
     }
 
     @GET
@@ -55,11 +55,11 @@ public class FruitController {
     @RestStreamElementType(APPLICATION_JSON)
     public Multi<JsonObject> stream() {
         return this.votes.emitOn(Infrastructure.getDefaultWorkerPool())
-                .map(vote -> FruitEntity.<FruitEntity>findByIdOptional(vote.fruitId())
-                        .map(fruit -> JsonObject.mapFrom(vote).put("fruitName", fruit.name))
-                        .orElseThrow()
-                )
-                .onFailure().recoverWithCompletion();
+                         .map(vote -> FruitEntity.<FruitEntity>findByIdOptional(vote.fruitId())
+                                                 .map(fruit -> JsonObject.mapFrom(vote).put("fruitName", fruit.name))
+                                                 .orElseThrow()
+                         )
+                         .onFailure().recoverWithCompletion();
     }
 
     @GET

@@ -12,6 +12,7 @@ import static jakarta.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 import static java.util.Objects.requireNonNullElse;
 
 public class ExceptionMapper {
+
     @ServerExceptionMapper(priority = 1)
     public RestResponse<Map<String, Object>> toResponse(WebApplicationException e) {
         var message = getMessage(e);
