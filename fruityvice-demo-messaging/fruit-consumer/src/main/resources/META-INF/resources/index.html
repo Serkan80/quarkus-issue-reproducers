@@ -23,37 +23,54 @@
     <p class="mt-4">No votes available</p>
 </template>
 
-<div x-show="votes !== null && Object.keys(votes).length > 0">
-    <div style="width: 800px">
-        <canvas id="votes-chart"></canvas>
-    </div>
-        <div class="row mt-3">
-            <div class="col-md-5">
-                <div class="main-card mb-3 card">
-                    <div class="card-body">
-                        <h5>Most Voted Fruits</h5>
-                        <table class="table table-bordered table-sm">
-                            <thead>
-                            <tr>
-                                <th>Fruit Name</th>
-                                <th>Channel</th>
-                                <th>Count</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <template x-for="(vote, index) in votes" :key="index">
-                                <tr>
-                                    <td x-text="vote.fruit"></td>
-                                    <td x-text="vote.channel"></td>
-                                    <td x-text="vote.count"></td>
-                                </tr>
-                            </template>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+<template x-if="fruits !== null && Object.keys(fruits).length == 0">
+    <p class="mt-4">No fruits available</p>
+</template>
+
+<div x-show="votes !== null && Object.keys(votes).length > 0" style="width: 800px">
+    <canvas id="votes-chart"></canvas>
+</div>
+
+<div x-show="fruits !== null && Object.keys(fruits).length > 0" x-init="getFruits()">
+    <div class="main-card mt-3 mb-3 card">
+        <div class="card-body">
+            <h5>Available Fruits</h5>
+            <table class="table table-sm align-middle">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Family</th>
+                    <th>Calories</th>
+                    <th>Carbs</th>
+                    <th>Fat</th>
+                    <th>Protein</th>
+                    <th>Sugar</th>
+                    <template x-if="!hasVoted">
+                        <th></th>
+                    </template>
+                </tr>
+                </thead>
+                <tbody>
+                <template x-for="(fruit, index) in fruits" :key="index">
+                    <tr>
+                        <td x-text="fruit.name"></td>
+                        <td x-text="fruit.family"></td>
+                        <td x-text="fruit.nutritions.calories"></td>
+                        <td x-text="fruit.nutritions.carbohydrates"></td>
+                        <td x-text="fruit.nutritions.fat"></td>
+                        <td x-text="fruit.nutritions.protein"></td>
+                        <td x-text="fruit.nutritions.sugar"></td>
+                        <template x-if="!hasVoted">
+                            <td>
+                                <a class="btn btn-outline-primary" @click.prevent="voteOnFruit(fruit.id)">Vote</a>
+                            </td>
+                        </template>
+                    </tr>
+                </template>
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
 </body>
 </html>

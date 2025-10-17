@@ -41,9 +41,9 @@ public class VoteEntity extends PanacheEntity {
         var withChannel = byChannel ? ", channel" : "";
 
         return find("""
-                select fruit.name, count(*) %s
+                select fruit.id, fruit.name, count(*) %s
                 from VoteEntity v
-                group by fruit.name %s
+                group by fruit.id, fruit.name %s
                 """.formatted(withChannel, withChannel))
                 .project(VoteSummary.class)
                 .withHint(HINT_READONLY, true)

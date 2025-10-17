@@ -1,9 +1,21 @@
 function init() {
 	return {
 		votes: [],
+		fruits: [],
 		votesCounter: {},
 		baseUrl: '/fruits',
 		chart: null,
+		hasVoted: false,
+
+		getFruits() {
+			const options = { headers: {'Content-Type': 'application/json'} };
+
+            fetch(this.baseUrl, options)
+                .then(res => res.json())
+                .then(json => {
+                    this.fruits = json;
+                });
+		},
 
 		get(path) {
             const options = { headers: {'Content-Type': 'application/json'} };
@@ -41,6 +53,19 @@ function init() {
                 const values = Object.values(this.votesCounter);
 				this.chart = drawChart(this.chart, labels, values);
             };
+		},
+
+		voteOnFruit(fruitId) {
+		    const randomNumber = Math.floor(Math.random() * 1000) + 1;
+		    const body = { fruitId: fruitId, voterId: `anonymous-${randomNumber}`, channel: 'WEB' };
+			const options = { headers: {'Content-Type': 'application/json'}, method: 'POST', body:  JSON.stringify(body)};
+
+            fetch('http://localhost:8080/fruits/votes', options)
+	            .then(res => {
+	                if (res.ok) {
+	                    this.hasVoted = true;
+	                }
+	            });
 		}
 	}
 }
