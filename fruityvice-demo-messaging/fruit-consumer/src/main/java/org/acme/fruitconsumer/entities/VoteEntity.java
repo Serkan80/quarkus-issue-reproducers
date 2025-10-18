@@ -1,6 +1,7 @@
 package org.acme.fruitconsumer.entities;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.panache.common.Sort;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
@@ -9,6 +10,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.acme.fruitconsumer.rest.dto.Vote;
 import org.acme.fruitconsumer.rest.dto.VoteSummary;
 
 import java.util.List;
@@ -46,6 +48,13 @@ public class VoteEntity extends PanacheEntity {
                 group by fruit.id, fruit.name %s
                 """.formatted(withChannel, withChannel))
                 .project(VoteSummary.class)
+                .withHint(HINT_READONLY, true)
+                .list();
+    }
+
+    public static List<Vote> allVotes() {
+        return findAll(Sort.by("fruit"))
+                .project(Vote.class)
                 .withHint(HINT_READONLY, true)
                 .list();
     }

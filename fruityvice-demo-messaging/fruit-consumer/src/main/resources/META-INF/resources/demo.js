@@ -67,15 +67,6 @@ function init() {
 	                    this.hasVoted = true;
 	                }
 	            });
-		},
-
-		refresh() {
-			const options = { headers: {'Content-Type': 'application/json'}, method: 'PATCH'};
-            this.fruits.forEach(fruit => {
-                options.body = JSON.stringify(fruit);
-                fetch(`http://localhost:8080/fruits/${fruit.name}`, options);
-            })
-            this.getFruits();
 		}
 	}
 }

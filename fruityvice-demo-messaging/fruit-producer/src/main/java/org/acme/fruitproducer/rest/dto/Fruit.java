@@ -2,16 +2,15 @@ package org.acme.fruitproducer.rest.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.acme.fruitproducer.rest.dto.ValidationGroups.Post;
 
 public record Fruit(
 
-        @NotBlank(groups = Post.class)
-        @Size(min = 3, max = 50, groups = Post.class)
+        @NotBlank
+        @Size(min = 3, max = 50)
         String name,
 
-        @NotBlank(groups = Post.class)
-        @Size(min = 3, max = 50, groups = Post.class)
+        @NotBlank
+        @Size(min = 3, max = 50)
         String family,
 
         Nutritions nutritions

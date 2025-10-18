@@ -7,6 +7,12 @@ import static io.restassured.http.ContentType.JSON;
 
 public class RestAssuredUtil {
 
+    public static ValidatableResponse post(String path) {
+        return given().contentType(JSON)
+                .when().post(path)
+                .then();
+    }
+
     public static ValidatableResponse post(Object body) {
         return post("", body);
     }

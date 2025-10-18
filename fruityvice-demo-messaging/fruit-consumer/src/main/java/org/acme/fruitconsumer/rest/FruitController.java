@@ -1,6 +1,5 @@
 package org.acme.fruitconsumer.rest;
 
-import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.vertx.core.json.JsonObject;
@@ -21,7 +20,6 @@ import org.jboss.resteasy.reactive.RestStreamElementType;
 import java.util.List;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.hibernate.jpa.QueryHints.HINT_READONLY;
 
 @Path("/fruits")
 public class FruitController {
@@ -44,10 +42,7 @@ public class FruitController {
     @GET
     @Path("/votes")
     public List<Vote> votes() {
-        return VoteEntity.findAll(Sort.by("fruit"))
-                         .project(Vote.class)
-                         .withHint(HINT_READONLY, true)
-                         .list();
+        return VoteEntity.allVotes();
     }
 
     @GET
