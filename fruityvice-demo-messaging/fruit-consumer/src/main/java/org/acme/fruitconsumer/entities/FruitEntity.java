@@ -31,7 +31,7 @@ public class FruitEntity extends PanacheEntity {
     public Nutritions nutritions;
 
     public static void upsert(Fruit fruit) {
-        var normalizedFruit = fruit.normalize();
+        var normalized = fruit.normalize();
 
         //@formatter:off
         getEntityManager().createQuery(
@@ -43,13 +43,13 @@ public class FruitEntity extends PanacheEntity {
                where name = excluded.name
                """
        )
-       .setParameter("name", normalizedFruit.name())
-       .setParameter("family", normalizedFruit.family())
-       .setParameter("nutritions", normalizedFruit.nutritions())
+       .setParameter("name", normalized.name())
+       .setParameter("family", normalized.family())
+       .setParameter("nutritions", normalized.nutritions())
        .executeUpdate();
         //@formatter:on
 
-        Log.infof("%s updated", normalizedFruit);
+        Log.infof("%s updated", normalized);
     }
 
     public static Fruit findByName(String name) {

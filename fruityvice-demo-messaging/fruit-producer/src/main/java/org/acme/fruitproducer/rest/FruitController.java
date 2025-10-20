@@ -37,7 +37,6 @@ public class FruitController {
     public Uni<RestResponse<Fruit>> sendFruit(@RestPath String name) {
         return this.client.findByName(name)
                           .onFailure().transform(e -> new ClientWebApplicationException("Fruit(name=%s) was not found on fruitivy.com".formatted(name)))
-                          .map(Fruit::normalize)
                           .call(this.fruitEmitter::send)
                           .invoke(fruit -> Log.infof("%s sent", fruit))
                           .map(RestResponse::ok);
