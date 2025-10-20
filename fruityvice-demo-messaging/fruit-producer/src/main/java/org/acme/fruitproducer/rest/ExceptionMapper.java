@@ -15,9 +15,9 @@ public class ExceptionMapper {
 
     @ServerExceptionMapper(priority = 1)
     public RestResponse<Map<String, Object>> toResponse(WebApplicationException e) {
-        var message = getMessage(e);
-        Log.errorf(message);
         var status = requireNonNullElse(e.getResponse().getStatusInfo(), BAD_REQUEST);
+        var message = getMessage(e);
+        Log.error(message);
 
         return RestResponse.status(
                 status, Map.of(
@@ -30,7 +30,7 @@ public class ExceptionMapper {
     @ServerExceptionMapper(priority = 2)
     public RestResponse<Map<String, Object>> toResponse(Exception e) {
         var message = requireNonNullElse(getMessage(e), "No error message was provided");
-        Log.errorf(message);
+        Log.error(message);
 
         return RestResponse.status(
                 INTERNAL_SERVER_ERROR, Map.of(
