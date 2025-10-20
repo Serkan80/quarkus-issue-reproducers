@@ -1,8 +1,6 @@
 package org.acme.fruitconsumer.rest;
 
 import io.smallrye.mutiny.Multi;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
-import io.vertx.core.json.JsonObject;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
@@ -48,13 +46,8 @@ public class FruitController {
     @GET
     @Path("/votes/stream")
     @RestStreamElementType(APPLICATION_JSON)
-    public Multi<JsonObject> stream() {
-        return this.votes.emitOn(Infrastructure.getDefaultWorkerPool())
-                         .map(vote -> FruitEntity.<FruitEntity>findByIdOptional(vote.fruitId())
-                                                 .map(fruit -> JsonObject.mapFrom(vote).put("fruitName", fruit.name))
-                                                 .orElseThrow()
-                         )
-                         .onFailure().recoverWithCompletion();
+    public Multi<Vote> stream() {
+        return this.votes;
     }
 
     @GET

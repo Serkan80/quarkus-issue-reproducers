@@ -17,9 +17,9 @@
     <script src="demo.js"></script>
 </head>
 
-<body x-data="init()" x-init="get('/votes/summary?by_channel=true')">
+<body x-data="init()" x-init="get('/votes/summary')">
 
-<template x-if="votes !== null && Object.keys(votes).length == 0">
+<template x-if="votesCounter !== null && Object.keys(votesCounter).length == 0">
     <p class="mt-4">No votes available</p>
 </template>
 
@@ -27,7 +27,7 @@
     <p class="mt-4">No fruits available</p>
 </template>
 
-<div x-show="votes !== null && Object.keys(votes).length > 0" style="width: 1000px; height: 500px">
+<div x-show="votesCounter !== null && Object.keys(votesCounter).length > 0" style="width: 1000px; height: 500px">
     <canvas id="votes-chart"></canvas>
 </div>
 

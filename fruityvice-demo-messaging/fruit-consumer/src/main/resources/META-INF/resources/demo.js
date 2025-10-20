@@ -44,11 +44,12 @@ function init() {
 			this.source = new EventSource(this.baseUrl + "/votes/stream");
             this.source.onmessage = (event) => {
                 const vote = JSON.parse(event.data);
+				const fruitName = this.fruits.filter(f => f.id == vote.fruitId).map(f => f.name)[0];
 
-                if (!this.votesCounter[vote.fruitName]) {
-                    this.votesCounter[vote.fruitName] = 0;
+                if (!this.votesCounter[fruitName]) {
+                    this.votesCounter[fruitName] = 0;
                 }
-                this.votesCounter[vote.fruitName]++;
+                this.votesCounter[fruitName]++;
 
                 const labels = Object.keys(this.votesCounter);
                 const values = Object.values(this.votesCounter);
