@@ -16,7 +16,8 @@ public class JsonObjectConverter implements MessageConverter {
     @Override
     public boolean canConvert(Message<?> message, Type type) {
         return message.getPayload().getClass().equals(JsonObject.class)
-               && !type.equals(JsonObject.class);
+               && !type.equals(JsonObject.class)
+               && type instanceof Class<?>;
     }
 
     @Override
