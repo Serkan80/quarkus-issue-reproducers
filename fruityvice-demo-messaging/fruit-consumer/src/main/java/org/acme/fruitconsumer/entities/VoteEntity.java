@@ -44,7 +44,7 @@ public class VoteEntity extends PanacheEntity {
 
         return find("""
                 select fruit.id, fruit.name, count(*) %s
-                from VoteEntity v
+                from VoteEntity
                 group by fruit.id, fruit.name %s
                 """.formatted(withChannel, withChannel))
                 .project(VoteSummary.class)

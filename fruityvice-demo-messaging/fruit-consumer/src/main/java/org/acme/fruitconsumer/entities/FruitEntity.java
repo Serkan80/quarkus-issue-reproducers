@@ -14,8 +14,6 @@ import org.acme.fruitconsumer.rest.dto.Nutritions;
 
 import java.util.List;
 
-import static org.hibernate.jpa.QueryHints.HINT_READONLY;
-
 @Entity
 @Table(name = "fruits")
 public class FruitEntity extends PanacheEntity {
@@ -62,7 +60,6 @@ public class FruitEntity extends PanacheEntity {
     public static List<Fruit> allFruits() {
         return findAll(Sort.by("name"))
                 .project(Fruit.class)
-                .withHint(HINT_READONLY, true)
                 .list();
     }
 }
