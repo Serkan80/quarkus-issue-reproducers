@@ -34,12 +34,14 @@ public class MessageConsumer {
             Log.infof("%s persisted", vote);
             return vote;
         } catch (ConstraintViolationException e) {
-            // skip duplicates without retrying
-            if ("23505".equals(e.getSQLState())) {
-                Log.warnf("Skipping duplicate %s", vote);
-                return null;
-            }
-            throw e;
+            // skip duplicate votes (or non-existing fruit) without retrying
+            return switch (e.getSQLState()) {
+                case "23503", "23505" -> {
+                    Log.warnf("Skipping duplicate vote or vote on non-existing fruit %s", vote);
+                    yield null;
+                }
+                default -> e;
+            };                      
         }
     }
 }
