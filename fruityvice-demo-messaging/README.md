@@ -18,8 +18,10 @@ You need the following libraries/tools to run this application:
 
 - JDK 21
 - Maven 3.x.x
-- Docker/Podman
+- Docker 28.x.x/Podman
 - Internet connection
+
+Make sure that you don't have Docker 29, which causes problems with Testcontainers !
 
 ## Running in dev mode
 
