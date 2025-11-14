@@ -20,6 +20,7 @@ You need the following libraries/tools to run this application:
 - Maven 3.x.x
 - Docker 28.x.x/Podman
 - Internet connection
+- optional: httpie or curl
 
 Make sure that you don't have Docker 29, which causes problems with Testcontainers !
 
