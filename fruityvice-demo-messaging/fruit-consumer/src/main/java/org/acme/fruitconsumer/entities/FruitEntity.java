@@ -14,6 +14,8 @@ import org.acme.fruitconsumer.rest.dto.Nutritions;
 
 import java.util.List;
 
+import static java.util.Locale.ENGLISH;
+
 @Entity
 @Table(name = "fruits")
 public class FruitEntity extends PanacheEntity {
@@ -51,7 +53,7 @@ public class FruitEntity extends PanacheEntity {
     }
 
     public static Fruit findByName(String name) {
-        return find("lower(name) = lower(?1)", name)
+        return find("name = ?1", name.toLowerCase(ENGLISH))
                 .project(Fruit.class)
                 .firstResultOptional()
                 .orElseThrow(() -> new NotFoundException("Fruit(name=%s) not found".formatted(name)));

@@ -20,6 +20,9 @@ import org.jboss.resteasy.reactive.RestResponse;
 @Path("/fruits")
 public class FruitController {
 
+    @RestClient
+    FruityViceClient client;
+
     @Inject
     @Channel("fruit-out")
     MutinyEmitter<Fruit> fruitEmitter;
@@ -28,18 +31,15 @@ public class FruitController {
     @Channel("vote-out")
     MutinyEmitter<Vote> voteEmitter;
 
-    @RestClient
-    FruityViceClient client;
-
     @POST
     @Path("/{name}")
     @RolesAllowed("admin")
     public Uni<RestResponse<Fruit>> sendFruit(@RestPath String name) {
         return this.client.findByName(name)
-                          .onFailure().transform(e -> new ClientWebApplicationException("Fruit(name=%s) not found on fruityvice.com".formatted(name)))
-                          .call(this.fruitEmitter::send)
-                          .invoke(fruit -> Log.infof("%s sent", fruit))
-                          .map(RestResponse::ok);
+                .onFailure().transform(e -> new ClientWebApplicationException("Fruit(name=%s) not found on fruityvice.com: %s".formatted(name, e.getMessage())))
+                .call(this.fruitEmitter::send)
+                .invoke(fruit -> Log.infof("%s sent", fruit))
+                .map(RestResponse::ok);
     }
 
     @POST

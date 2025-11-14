@@ -8,7 +8,7 @@ import org.eclipse.microprofile.reactive.messaging.Message;
 import java.lang.reflect.Type;
 
 /**
- * Converts incoming {@link JsonObject} into the given Object type.
+ * Converts incoming {@link JsonObject} into the given object type.
  */
 @ApplicationScoped
 public class JsonObjectConverter implements MessageConverter {

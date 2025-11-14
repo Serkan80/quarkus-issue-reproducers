@@ -17,7 +17,6 @@ import java.util.List;
 
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
-import static org.hibernate.jpa.QueryHints.HINT_READONLY;
 
 @Entity
 @Table(name = "votes")
@@ -48,14 +47,12 @@ public class VoteEntity extends PanacheEntity {
                 group by fruit.id, fruit.name %s
                 """.formatted(withChannel, withChannel))
                 .project(VoteSummary.class)
-                .withHint(HINT_READONLY, true)
                 .list();
     }
 
     public static List<Vote> allVotes() {
         return findAll(Sort.by("fruit"))
                 .project(Vote.class)
-                .withHint(HINT_READONLY, true)
                 .list();
     }
 }

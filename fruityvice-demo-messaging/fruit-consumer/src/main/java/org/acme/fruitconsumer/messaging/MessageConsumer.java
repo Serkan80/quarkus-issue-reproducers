@@ -40,8 +40,8 @@ public class MessageConsumer {
                     Log.warnf("Skipping duplicate vote or vote on non-existing fruit %s", vote);
                     yield null;
                 }
-                default -> e;
-            };                      
+                default -> throw e;
+            };
         }
     }
 }

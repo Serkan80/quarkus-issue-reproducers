@@ -8,7 +8,7 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.jboss.resteasy.reactive.RestPath;
 
 @Path("/api/fruit")
-@RegisterRestClient(configKey = "fruityvice")
+@RegisterRestClient(configKey = "fruity")
 public interface FruityViceClient {
 
     @GET
